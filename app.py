@@ -10,11 +10,9 @@ import datetime
 import numpy as np
 import os
 import s3fs
-import athena_key
 
-fs = s3fs.S3FileSystem(key = athena_key.access(), secret=athena_key.secret())
-with fs.open('s3://yuzu-charts/chart.csv', 'rb') as f:
-    df = pd.read_csv(f)
+
+df = pd.read_csv('https://yuzu-charts.s3-ap-northeast-1.amazonaws.com/chart.csv')
 
 # df = pd.read_csv('yuzu_chart_csv.csv') ローカルからS3に変更
 # 更新時によってずれるからDataFrameから参照する
