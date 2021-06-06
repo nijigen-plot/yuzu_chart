@@ -5,3 +5,4 @@ plotly
 pandas
 numpy
 gunicorn
+s3fs
