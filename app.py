@@ -66,4 +66,5 @@ app.layout = html.Div([
     ], style={'display':'inline-block', 'width': '98%', 'float':'center'})
 ], style={'background-color': 'rgba(255, 165, 0, 0.05)'})
 
-app.run_server(port=8052, debug=True)
+if __name__ ==  '__main__':
+    app.run_server(debug=True)
