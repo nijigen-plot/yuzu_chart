@@ -1,6 +1,8 @@
 import pydata_google_auth
 import pandas as pd
 from google.cloud import bigquery
+import s3fs
+import athena_key
 
 credentials = pydata_google_auth.get_user_credentials(
     ['https://www.googleapis.com/auth/bigquery']
@@ -31,5 +33,8 @@ def category_separate(x):
 df['category'] = df['name'].apply(lambda x : category_separate(x))
 
 print(df)
-print('download completed.')
-df.to_csv('yuzu_chart_csv.csv', index=False, encoding='utf-8-sig')
+fs = s3fs.S3FileSystem(key=athena_key.access(), secret=athena_key.secret())
+with fs.open('s3://yuzu-charts/chart.csv', 'wb') as f:
+    f.write(df.to_csv(index=False).encode())
+
+print('upload completed.')

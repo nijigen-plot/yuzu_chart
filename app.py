@@ -9,7 +9,6 @@ import pandas as pd
 import datetime
 import numpy as np
 import os
-import s3fs
 
 
 df = pd.read_csv('https://yuzu-charts.s3-ap-northeast-1.amazonaws.com/chart.csv')
