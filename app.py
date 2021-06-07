@@ -21,9 +21,12 @@ yesterday = str(pd.to_datetime(today).date() - datetime.timedelta(days=1))
 stock_new_item = pd.concat([df[df['dt'] == today],
            df[df['dt'] == yesterday]], axis=0).drop_duplicates('name', keep=False)
 # 今日の商品群
-tdf = df[df['dt'] == today]
+tdf = df[df['dt'] == today].reset_index(drop=True)
 # カテゴリもこれにつけようか
 # 全体・抱き枕・タペストリー・とか諸々
+# リンクをつける
+tdf['Link'] = tdf['url'].apply(lambda x : f"[Link]({x})")
+
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets = external_stylesheets)
@@ -102,7 +105,43 @@ app.layout = html.Div([
             dcc.Markdown(children = f'#### {today} 商品価格一覧'),
             dcc.Graph(id = 'price_box_plot')
         ], style={'display':'inline-block', 'width':'45%', 'float':'right'})
-    ], style={'display':'inline-block', 'width': '98%', 'float':'center'})
+    ], style={'display':'inline-block', 'width': '98%', 'float':'center'}),
+    # 商品一覧のフィルタ（リンクもつけたい）
+    html.Div([
+        dcc.Markdown(children = f'- カテゴリフィルタ(商品一覧)'),
+        dcc.Dropdown(
+            id = 'choice_category_for_list',
+            options=[
+                {'value': 'all', 'label': '全体'},
+                {'value': 'daki', 'label': '抱き枕カバー'},
+                {'value': 'tape', 'label': 'タペストリー'},
+                {'value': 'kuji', 'label': 'くじ特典'},
+                {'value': 'shikishi', 'label': '色紙'},
+                {'value': 'fanbook', 'label': 'ファンブック'},
+                {'value': 'other', 'label': 'その他'}
+            ],
+            value='all',
+            clearable=False
+        )
+    ], style={'display':'inline-block', 'width':'98%', 'float':'left', 'margin-top':'10px'}),
+    # 商品一覧
+    html.Div([
+        dcc.Markdown(children = f'#### {today} 商品一覧'),
+        dash_table.DataTable(
+            style_data={
+                'text-align': 'center',
+                'whiteSpace':'normal',
+                'height':'auto'
+            },
+            id = 'commodity_list',
+            columns=[{'name': '商品名', 'id': 'name'},
+                     {'name': '価格', 'id': 'price'},
+                     {'name': '商品ページ', 'id': 'Link', 'type': 'text', 'presentation': 'markdown'}
+                     ],
+            style_cell=dict(textAlign='center', font_size=12),
+            style_header=dict(textAlign='center', backgroundColor='bisque', font_size=17)
+        )
+    ])
 ], style={'background-color': 'rgba(255, 165, 0, 0.05)'})
 
 # 日別取り扱い商品数のフィルタ
@@ -127,6 +166,18 @@ def update_category(choice_category):
     fig_b.update(layout_showlegend=False)
 
     return fig_a, fig_b
+
+# 商品一覧のフィルタ
+@app.callback(
+    Output('commodity_list', 'data'),
+    Input('choice_category_for_list', 'value')
+)
+
+def update_commodity(choice_category_for_list):
+    # 商品一覧テーブルにカテゴリを反映
+    commodity_df = category_judge(choice_category_for_list, tdf)
+    return commodity_df[['name','price','Link']].to_dict('records')
+
 
 if __name__ ==  '__main__':
     app.run_server(debug=True, port=8052)
