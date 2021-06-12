@@ -1,3 +1,4 @@
 *.ipynb
 athena_key.py
 __pycache__/
+yuzu_chart_csv.csv
