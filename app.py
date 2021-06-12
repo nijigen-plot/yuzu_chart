@@ -26,7 +26,7 @@ tdf = df[df['dt'] == today].reset_index(drop=True)
 # 全体・抱き枕・タペストリー・とか諸々
 # リンクをつける
 tdf['Link'] = tdf['url'].apply(lambda x : f"[Link]({x})")
-
+stock_new_item['Link'] = stock_new_item['url'].apply(lambda x : f"[Link]({x})")
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets = external_stylesheets)
@@ -94,10 +94,13 @@ app.layout = html.Div([
                     'height':'auto'
                 },
                 id = 'stock_new_item_table',
-                data=stock_new_item[['name','price']].to_dict('records'),
-                columns=[{'name': '商品名', 'id': 'name'}, {'name': '価格', 'id': 'price'}],
+                data=stock_new_item[['name','price','Link']].to_dict('records'),
+                columns=[{'name': '商品名', 'id': 'name'}, 
+                         {'name': '価格', 'id': 'price'},
+                         {'name': '商品ページ', 'id': 'Link', 'type': 'text', 'presentation': 'markdown'}],
                 style_cell=dict(textAlign='center', font_size=12),
-                style_header=dict(textAlign='center', backgroundColor='bisque', font_size=17)
+                style_header=dict(textAlign='center', backgroundColor='bisque', font_size=17),
+                sort_action = 'native'
             )
         ], style={'display':'inline-block', 'width': '50%', 'float':'center'}),
         # 価格帯一覧
@@ -139,7 +142,8 @@ app.layout = html.Div([
                      {'name': '商品ページ', 'id': 'Link', 'type': 'text', 'presentation': 'markdown'}
                      ],
             style_cell=dict(textAlign='center', font_size=12),
-            style_header=dict(textAlign='center', backgroundColor='bisque', font_size=17)
+            style_header=dict(textAlign='center', backgroundColor='bisque', font_size=17),
+            sort_action = 'native'
         )
     ])
 ], style={'background-color': 'rgba(255, 165, 0, 0.05)'})
