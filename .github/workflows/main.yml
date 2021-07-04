@@ -51,9 +51,12 @@ jobs:
       # google_authをインストール(多分認証通らないだろうが)
       - name: Install google_auth
         run: pip install google-auth==1.32.0
-      # gopogle.cloud bigqueryをインストール
+      # google.cloud bigqueryをインストール
       - name: Install google-cloud-bigquery
         run: pip install google-cloud-bigquery==2.20.0
+      # pyarrowをインストール
+      - name: Install pyarrow
+        run: pip install pyarrow==2.0.0
 
       
       # # GCPの認証情報を取得する
