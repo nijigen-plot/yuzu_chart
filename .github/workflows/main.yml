@@ -64,6 +64,8 @@ jobs:
 
       # Pythonファイルを実行
       - name: Run data download
+        env:
+          str_1: ${{ secrets.GCP_SERVICE_ACCOUNT_INFO }}
         run: python data_auto_download_for_actions.py
 
       # Pandasで加工したcsvファイルをS3へアップロード
