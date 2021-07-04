@@ -2,17 +2,10 @@
 name: data_download_test
 
 # ワークフローをいつ実行するかを決めます
-# 手動実行のみ
-on: [ workflow_dispatch ]
-  # # マスターブランチに対してのみトリガー 一旦テストでブランチ他に作りたいからパス
-  # push:
-  #   branches: [ master ]
-  # pull_request:
-  #   branches: [ master ]
-  
-  # # 実行時間
-  # schedule:
-  #   - cron: '0 23 * * *'
+# 毎日夜11時
+on:
+  schedule:
+    - cron: '00 23 * * *'
 
 
 # 実行内容
@@ -22,38 +15,39 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.7, 3.8]
+        python-version: [3.7]
 
     steps:
       # リポジトリをチェックアウト
       - uses: actions/checkout@v2
+        with:
+          ref: use_github_actions
+
       # setup-python@v2っていうのを使う
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      # Pandasをインストール
+      # Pandasをインストール (一気にインストールできるらしいけどね)
       - name: Install Pandas
         run: pip install pandas==1.2.0
-      
-      # AWSの認証情報を取得する
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-1
-      
-      # # GCPの認証情報を取得する
-      # - name: Configure GCP credentials
-      #   uses: google-github-actions/get-gke-credentials@main
-      #   with:
-      #     cluster_name: my-first-cluster-1
+      # google_authをインストール(多分認証通らないだろうが)
+      - name: Install google_auth
+        run: pip install google-auth==1.32.0
+      # google.cloud bigqueryをインストール
+      - name: Install google-cloud-bigquery
+        run: pip install google-cloud-bigquery==2.20.0
+      # pyarrowをインストール
+      - name: Install pyarrow
+        run: pip install pyarrow==2.0.0
+      # s3fsをインストール
+      - name: Install s3fs
+        run: pip install s3fs==0.4.2
 
       # Pythonファイルを実行
       - name: Run data download
+        env:
+          str_1: ${{ secrets.GCP_SERVICE_ACCOUNT_INFO }}
+          athena_access: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          athena_secret: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: python data_auto_download_for_actions.py
-
-      # Pandasで加工したcsvファイルをS3へアップロード
-      - name: Upload file to S3
-        run: aws s3 cp ./chart.csv s3://yuzu-charts/chart.csv --quiet
