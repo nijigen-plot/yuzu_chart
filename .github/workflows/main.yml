@@ -2,7 +2,7 @@
 name: data_download_test
 
 # ワークフローをいつ実行するかを決めます
-on:
+on: workflow_dispatch
   # # マスターブランチに対してのみトリガー 一旦テストでブランチ他に作りたいからパス
   # push:
   #   branches: [ master ]
@@ -10,7 +10,7 @@ on:
   #   branches: [ master ]
   
   # Actionタブから手動でも実行できる
-  workflow_dispatch:
+
   
   # 実行時間
   schedule:
