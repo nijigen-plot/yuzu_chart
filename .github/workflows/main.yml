@@ -73,4 +73,4 @@ jobs:
 
       # Pandasで加工したcsvファイルをS3へアップロード
       - name: Upload file to S3
-        run: aws s3 cp ./chart.csv s3://yuzu-charts/chart.csv --quiet
+        run: aws s3 cp ./chart.csv s3://yuzu-charts/ --quiet
