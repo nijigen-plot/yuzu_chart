@@ -20,41 +20,42 @@ on:
 # 実行内容
 jobs:
   build:
-  runs-on: ubuntu-latest
-  strategy:
-    matrix:
-      python-version: [3.7, 3.8]
 
-  steps:
-    # リポジトリをチェックアウト
-    - uses: actions/checkout@v2
-    # setup-python@v2っていうのを使う
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    # Pandasをインストール
-    - name: Install Pandas
-      run: pip install pandas==1.2.0
-    
-    # AWSの認証情報を取得する
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ap-northeast-1
-    
-    # # GCPの認証情報を取得する
-    # - name: Configure GCP credentials
-    #   uses: google-github-actions/get-gke-credentials@main
-    #   with:
-    #     cluster_name: my-first-cluster-1
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7, 3.8]
 
-    # Pythonファイルを実行
-    - name: Run data download
-      run: python data_auto_download_for_actions.py
+    steps:
+      # リポジトリをチェックアウト
+      - uses: actions/checkout@v2
+      # setup-python@v2っていうのを使う
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      # Pandasをインストール
+      - name: Install Pandas
+        run: pip install pandas==1.2.0
+      
+      # AWSの認証情報を取得する
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
+      
+      # # GCPの認証情報を取得する
+      # - name: Configure GCP credentials
+      #   uses: google-github-actions/get-gke-credentials@main
+      #   with:
+      #     cluster_name: my-first-cluster-1
 
-    # Pandasで加工したcsvファイルをS3へアップロード
-    - name: Upload file to S3
-      run: aws s3 cp ./chart.csv s3://yuzu-charts/chart.csv --quiet
+      # Pythonファイルを実行
+      - name: Run data download
+        run: python data_auto_download_for_actions.py
+
+      # Pandasで加工したcsvファイルをS3へアップロード
+      - name: Upload file to S3
+        run: aws s3 cp ./chart.csv s3://yuzu-charts/chart.csv --quiet
