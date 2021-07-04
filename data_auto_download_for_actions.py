@@ -2,8 +2,9 @@ import pandas as pd
 from google.cloud import bigquery
 from google.oauth2 import service_account
 import os
+import base64
 
-str_1 = eval(os.environ.get('str_1'))
+str_1 = eval(base64.b64decode((os.environ.get('str_1'))))
 credentials = service_account.Credentials.from_service_account_info(str_1, scopes=["https://www.googleapis.com/auth/bigquery"])
 client = bigquery.Client(project='voltaic-country-281210', credentials=credentials)
 query = """
