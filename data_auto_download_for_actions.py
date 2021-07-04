@@ -3,8 +3,13 @@ from google.cloud import bigquery
 from google.oauth2 import service_account
 import os
 import base64
+import s3fs
 
+# githubのsecretsから鍵を持ってくる
 str_1 = eval(base64.b64decode((os.environ.get('str_1'))))
+athena_a = os.environ.get('athena_access')
+athena_s = os.environ.get('athena_secret')
+
 credentials = service_account.Credentials.from_service_account_info(str_1, scopes=["https://www.googleapis.com/auth/bigquery"])
 client = bigquery.Client(project='voltaic-country-281210', credentials=credentials)
 query = """
@@ -29,5 +34,7 @@ def category_separate(x):
 # カテゴリを生成
 df['category'] = df['name'].apply(lambda x : category_separate(x))
 
-# actionsディレクトリに出力
-df.to_csv('.github/workflows/chart.csv', index=False, encoding='utf-8-sig')
+# S3へアップロード
+fs = s3fs.S3FileSystem(key=athena_a, secret=athena_s)
+with fs.open('s3://yuzu-charts/chart.csv', 'wb') as f:
+    f.write(df.to_csv(index=False).encode())
