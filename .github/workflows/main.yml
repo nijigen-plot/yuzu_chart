@@ -2,17 +2,10 @@
 name: data_download_test
 
 # ワークフローをいつ実行するかを決めます
-# 手動実行のみ
-on: [ workflow_dispatch ]
-  # # マスターブランチに対してのみトリガー 一旦テストでブランチ他に作りたいからパス
-  # push:
-  #   branches: [ master ]
-  # pull_request:
-  #   branches: [ master ]
-  
-  # # 実行時間
-  # schedule:
-  #   - cron: '0 23 * * *'
+# 毎日夜11時
+on:
+  schedule:
+    - cron: '00 23 * * *'
 
 
 # 実行内容
@@ -22,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.7, 3.8]
+        python-version: [3.7]
 
     steps:
       # リポジトリをチェックアウト
