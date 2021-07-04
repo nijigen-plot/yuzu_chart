@@ -27,6 +27,8 @@ jobs:
     steps:
       # リポジトリをチェックアウト
       - uses: actions/checkout@v2
+        with:
+          ref: use_github_actions
     
       # AWSの認証情報を取得する
       - name: Configure AWS credentials
