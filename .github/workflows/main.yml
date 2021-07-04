@@ -3,7 +3,8 @@ name: data_download_test
 
 # ワークフローをいつ実行するかを決めます
 # 手動実行のみ
-on: workflow_dispatch
+on: 
+  workflow_dispatch:
   # # マスターブランチに対してのみトリガー 一旦テストでブランチ他に作りたいからパス
   # push:
   #   branches: [ master ]
