@@ -1,8 +1,6 @@
 import pydata_google_auth
 import pandas as pd
 from google.cloud import bigquery
-import s3fs
-import athena_key
 
 credentials = pydata_google_auth.get_user_credentials(
     ['https://www.googleapis.com/auth/bigquery']
