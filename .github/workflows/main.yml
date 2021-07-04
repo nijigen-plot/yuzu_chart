@@ -48,9 +48,9 @@ jobs:
       # Pandasをインストール (一気にインストールできるらしいけどね)
       - name: Install Pandas
         run: pip install pandas==1.2.0
-      # pydata_google_authをインストール(多分認証通らないだろうが)
-      - name: Install pydata_google_auth
-        run: pip install pydata_google_auth==1.1.0
+      # google_authをインストール(多分認証通らないだろうが)
+      - name: Install google_auth
+        run: pip install google-auth==1.32.0
       # gopogle.cloud bigqueryをインストール
       - name: Install google-cloud-bigquery
         run: pip install google-cloud-bigquery==2.20.0

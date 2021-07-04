@@ -1,13 +1,10 @@
-import pydata_google_auth
 import pandas as pd
 from google.cloud import bigquery
+from google.oauth2 import service_account
 
-credentials = pydata_google_auth.get_user_credentials(
-    ['https://www.googleapis.com/auth/bigquery']
-)
-
-client = bigquery.Client(project='voltaic-country-281210', credentials = credentials)
-
+str_1 = ${{ secrets.GCP_SERVICE_ACCOUNT_INFO }}
+credentials = service_account.Credentials.from_service_account_info(str_1, scopes=["https://www.googleapis.com/auth/bigquery"])
+client = bigquery.Client(project='voltaic-country-281210', credentials=credentials)
 query = """
 SELECT * FROM `voltaic-country-281210.bqtest.yuzu_chart`
 """
