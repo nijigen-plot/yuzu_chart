@@ -7,7 +7,6 @@ on:
   schedule:
     - cron: '00 23 * * *'
 
-
 # 実行内容
 jobs:
   build:
