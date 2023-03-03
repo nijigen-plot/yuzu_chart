@@ -1,15 +1,15 @@
+import datetime
+import os
+
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_table
+import numpy as np
+import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output, State
-import pandas as pd
-import datetime
-import numpy as np
-import os
-
 
 df = pd.read_csv('https://yuzu-charts.s3-ap-northeast-1.amazonaws.com/chart.csv')
 
@@ -184,4 +184,5 @@ def update_commodity(choice_category_for_list):
 
 
 if __name__ ==  '__main__':
-    app.run_server(debug=True, port=8052)
+    port_number = int(os.environ.get("PORT", 5000))
+    app.run_server(debug=True, port=port_number)
