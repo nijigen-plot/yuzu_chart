@@ -185,4 +185,4 @@ def update_commodity(choice_category_for_list):
 
 if __name__ ==  '__main__':
     port_number = int(os.environ.get("PORT", 5000))
-    app.run_server(debug=True, port=port_number)
+    app.run_server(debug=True, port=port_number, host="0.0.0.0")
