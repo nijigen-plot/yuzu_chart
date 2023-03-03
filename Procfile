@@ -1,0 +1,1 @@
+web: yuzu_chart
